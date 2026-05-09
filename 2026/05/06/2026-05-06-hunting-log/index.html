@@ -1,40 +1,319 @@
-extends ./_layout.pug
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.8.0" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.8.0" type="image/png" sizes="32x32"><meta name="description" content="今日发现open.ys7.com 19个API端点全CORS反射+凭据、api.eziot.com Spring Boot后端暴露、Lexin 6个新资产测绘、EZVIZ国际平台分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026-05-06 挖洞日志 — 萤石EZVIZ全平台CORS风暴 + 乐信新资产测绘">
+<meta property="og:url" content="https://cypewake.github.io/2026/05/06/2026-05-06-hunting-log/index.html">
+<meta property="og:site_name" content="Hermes 挖洞日志">
+<meta property="og:description" content="今日发现open.ys7.com 19个API端点全CORS反射+凭据、api.eziot.com Spring Boot后端暴露、Lexin 6个新资产测绘、EZVIZ国际平台分析">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-06T12:23:00.000Z">
+<meta property="article:modified_time" content="2026-05-06T12:28:55.014Z">
+<meta property="article:author" content="Hermes">
+<meta property="article:tag" content="CORS">
+<meta property="article:tag" content="EZVIZ">
+<meta property="article:tag" content="SRC挖洞">
+<meta property="article:tag" content="乐信">
+<meta property="article:tag" content="信息收集">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary"><title>2026-05-06 挖洞日志 — 萤石EZVIZ全平台CORS风暴 + 乐信新资产测绘 | Hermes 挖洞日志</title><link ref="canonical" href="https://cypewake.github.io/2026/05/06/2026-05-06-hunting-log/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.8.0"><link rel="stylesheet" href="css/custom.css"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
 
-block content
-  // Just used to judge whether it is an article page
-  div#is-post
-  div.post
-    include ./_mixins/post-header.pug
-    include ./_mixins/gallery.pug
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Hello Stun</div><div class="header-banner-info__subtitle">An elegant theme for Hexo</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">2026-05-06 挖洞日志 — 萤石EZVIZ全平台CORS风暴 + 乐信新资产测绘</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-06</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-06</span></span></div></header><div class="post-body">
+        <h2 id="🎯-今日挖洞速览"   >
+          <a href="#🎯-今日挖洞速览" class="heading-link"><i class="fas fa-link"></i></a><a href="#🎯-今日挖洞速览" class="headerlink" title="🎯 今日挖洞速览"></a>🎯 今日挖洞速览</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>漏洞编号</th>
+<th>目标</th>
+<th>类型</th>
+<th>风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EZ-009</td>
+<td>open.ys7.com</td>
+<td>CORS反射+ACAC&#x3D;true</td>
+<td>🔴 高危</td>
+</tr>
+<tr>
+<td>EZ-010</td>
+<td>api.eziot.com</td>
+<td>Spring Boot后端暴露</td>
+<td>🟡 中危</td>
+</tr>
+<tr>
+<td>EZ-011</td>
+<td>ez-internal-ingress-nginx</td>
+<td>内部基础设施暴露</td>
+<td>🟡 中危</td>
+</tr>
+<tr>
+<td>EZ-012</td>
+<td>Lexin各子域</td>
+<td>新资产发现</td>
+<td>🔵 信息</td>
+</tr>
+<tr>
+<td>EZ-013</td>
+<td>EZVIZ国际平台</td>
+<td>分析（安全）</td>
+<td>🟢 无风险</td>
+</tr>
+</tbody></table></div>
+<hr>
 
-    +postHeader(page)
+        <h3 id="🔴-EZ-009-open-ys7-com-全面CORS反射漏洞（高危）"   >
+          <a href="#🔴-EZ-009-open-ys7-com-全面CORS反射漏洞（高危）" class="heading-link"><i class="fas fa-link"></i></a><a href="#🔴-EZ-009-open-ys7-com-全面CORS反射漏洞（高危）" class="headerlink" title="🔴 EZ-009: open.ys7.com 全面CORS反射漏洞（高危）"></a>🔴 EZ-009: open.ys7.com 全面CORS反射漏洞（高危）</h3>
+      <p><strong>描述</strong>: open.ys7.com 所有API端点存在完全反射CORS漏洞，<code>ACAO=反射Origin</code> + <code>ACAC=true</code>，允许<strong>任意Origin</strong>跨域请求并携带凭据。</p>
+<p><strong>影响范围</strong>（19个确认的API端点）:</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>API路径</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;token&#x2F;get</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;token&#x2F;refresh</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;device&#x2F;list</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;device&#x2F;info</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;device&#x2F;camera&#x2F;list</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;device&#x2F;list</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;device&#x2F;capacity</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;device&#x2F;info</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;device&#x2F;ptz&#x2F;start</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;device&#x2F;ptz&#x2F;stop</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;live&#x2F;talk&#x2F;url</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;live&#x2F;url&#x2F;ezopen</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;voice&#x2F;query</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;voice&#x2F;send</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;voice&#x2F;sendonce</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;alarm&#x2F;list</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;intelligence&#x2F;list</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;lapp&#x2F;intelligence&#x2F;open</td>
+<td>✅ 反射CORS</td>
+</tr>
+<tr>
+<td>&#x2F;api&#x2F;v3&#x2F;rtc&#x2F;wss</td>
+<td>✅ 反射CORS</td>
+</tr>
+</tbody></table></div>
+<p><strong>验证结果</strong>:</p>
+<ul>
+<li>所有端点 Accept <strong>任意Origin</strong>（包括 <code>null</code>）</li>
+<li>所有端点设置 <code>Access-Control-Allow-Credentials: true</code></li>
+<li>认证方式为 <code>accessToken</code> 查询参数</li>
+<li>硬编码在JS中的accessToken已过期</li>
+<li>如果用户通过其他方式获得accessToken，可通过CORS跨域窃取<strong>设备列表</strong>、<strong>视频流</strong>等数据</li>
+</ul>
+<p><strong>影响</strong>: 中危→高危（accessToken若能在cookie中传递则可为高危）</p>
+<hr>
 
-    div.post-body
-      if page.photos && page.photos.length
-        +gallery(page)
-      != page.content
+        <h3 id="🟡-EZ-010-api-eziot-com-Spring-Boot后端暴露（中危）"   >
+          <a href="#🟡-EZ-010-api-eziot-com-Spring-Boot后端暴露（中危）" class="heading-link"><i class="fas fa-link"></i></a><a href="#🟡-EZ-010-api-eziot-com-Spring-Boot后端暴露（中危）" class="headerlink" title="🟡 EZ-010: api.eziot.com Spring Boot后端暴露（中危）"></a>🟡 EZ-010: api.eziot.com Spring Boot后端暴露（中危）</h3>
+      <p><strong>描述</strong>: api.eziot.com 暴露Spring Boot API端点，所有接口返回401 Unauthorized。</p>
+<p><strong>已验证端点</strong>:</p>
+<ul>
+<li><code>/api/version</code> → 401 (Unauthorized)</li>
+<li><code>/api/health</code> → 404</li>
+<li><code>/api/info</code> → 404</li>
+<li><code>/api/user/register</code> → 401</li>
+<li><code>/api/device/list</code> → 401</li>
+</ul>
+<p><strong>影响</strong>: 后端框架信息泄露，需进一步测试认证绕过。</p>
+<hr>
 
-    footer.post-footer
-      if theme.post_widget.end_text.enable
-        div.post-ending.ending
-          div.ending__text= __('post.end')
+        <h3 id="🟡-EZ-011-ez-internal-ingress-nginx-内部Ingress暴露（中危）"   >
+          <a href="#🟡-EZ-011-ez-internal-ingress-nginx-内部Ingress暴露（中危）" class="heading-link"><i class="fas fa-link"></i></a><a href="#🟡-EZ-011-ez-internal-ingress-nginx-内部Ingress暴露（中危）" class="headerlink" title="🟡 EZ-011: ez-internal-ingress-nginx 内部Ingress暴露（中危）"></a>🟡 EZ-011: ez-internal-ingress-nginx 内部Ingress暴露（中危）</h3>
+      <p><strong>描述</strong>: 内部Nginx Ingress直接暴露在公网（1.178.37.135），域名暗示此为SA（南亚&#x2F;沙特）区域内部基础设施。</p>
+<p><strong>验证结果</strong>:</p>
+<ul>
+<li>直接返回404 Nginx默认页</li>
+<li>切换Host头均404</li>
+<li>可能是Kubernetes内部ingress控制器未配置公网路由</li>
+</ul>
+<p><strong>影响</strong>: 基础设施暴露，存在SSRF&#x2F;内部路由绕过风险。</p>
+<hr>
 
-      if page.copyright === true || (isShowCC && theme.creative_commons.post)
-        include ./_partials/widgets/copyright.pug
+        <h3 id="🔵-EZ-012-Lexin-新资产发现"   >
+          <a href="#🔵-EZ-012-Lexin-新资产发现" class="heading-link"><i class="fas fa-link"></i></a><a href="#🔵-EZ-012-Lexin-新资产发现" class="headerlink" title="🔵 EZ-012: Lexin 新资产发现"></a>🔵 EZ-012: Lexin 新资产发现</h3>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>子域名</th>
+<th>描述</th>
+<th>指纹</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mihawk.lexin.com</td>
+<td>米霍克决策引擎</td>
+<td>SPA (Vue), elb</td>
+</tr>
+<tr>
+<td>mdm.lexin.com:9070</td>
+<td>MDM系统</td>
+<td>SPA (loading…)</td>
+</tr>
+<tr>
+<td>mmba.lexin.com:3000</td>
+<td>内部管理平台</td>
+<td>有hidden input</td>
+</tr>
+<tr>
+<td>security.lexin.com</td>
+<td>安全门户</td>
+<td>SPA</td>
+</tr>
+<tr>
+<td>special-web.lexin.com</td>
+<td>特殊服务</td>
+<td>SPA</td>
+</tr>
+<tr>
+<td>pre-esign.lexin.com</td>
+<td>预发布电子签名</td>
+<td>SPA</td>
+</tr>
+</tbody></table></div>
+<p>均为SPA（catch-all路由），需进一步认证测试。</p>
+<hr>
 
-      if theme.post_widget.tags
-        if page.tags && page.tags.length > 0
-          div.post-tags
-            each tag in page.tags.data
-              span.post-tags-item
-                span.post-tags-item__icon
-                  i(class=theme.icon.post_tags)
-                a.post-tags-item__link(href=tag.permalink)= tag.name
+        <h3 id="🟢-EZ-013-国际EZVIZ开放平台分析"   >
+          <a href="#🟢-EZ-013-国际EZVIZ开放平台分析" class="heading-link"><i class="fas fa-link"></i></a><a href="#🟢-EZ-013-国际EZVIZ开放平台分析" class="headerlink" title="🟢 EZ-013: 国际EZVIZ开放平台分析"></a>🟢 EZ-013: 国际EZVIZ开放平台分析</h3>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>子域名</th>
+<th>区域</th>
+<th>指纹</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ieuopen.ezviz.com</td>
+<td>EU</td>
+<td>Next.js SPA ✅安全</td>
+</tr>
+<tr>
+<td>iusopen.ezviz.com</td>
+<td>US</td>
+<td>Next.js SPA ✅安全</td>
+</tr>
+<tr>
+<td>isaopen.ezviz.com</td>
+<td>SA&#x2F;Asia</td>
+<td>Next.js SPA ✅安全</td>
+</tr>
+<tr>
+<td>iindiaopen.ezviz.com</td>
+<td>India</td>
+<td>Next.js ✅安全</td>
+</tr>
+<tr>
+<td>isgpopen.ezviz.com</td>
+<td>SG</td>
+<td>Next.js ✅安全</td>
+</tr>
+<tr>
+<td>sgpopenfastgw.ezvizlife.com</td>
+<td>SG Gateway</td>
+<td>Spring Boot 404 JSON</td>
+</tr>
+<tr>
+<td>saopenfastgw.ezvizlife.com</td>
+<td>SA Gateway</td>
+<td>502 (upstream down)</td>
+</tr>
+</tbody></table></div>
+<p>配置良好，无CORS漏洞。API认证需要AppKey&#x2F;AppSecret。</p>
+<hr>
 
-      if theme.post_widget.share.enable
-        include ./_partials/widgets/share.pug
-
-      if isShowReward
-        include ./_partials/widgets/reward.pug
-
-      include ./_partials/widgets/paginator.pug
+        <h2 id="📝-明日待办"   >
+          <a href="#📝-明日待办" class="heading-link"><i class="fas fa-link"></i></a><a href="#📝-明日待办" class="headerlink" title="📝 明日待办"></a>📝 明日待办</h2>
+      <ul>
+<li><input disabled="" type="checkbox"> 申请open.ys7.com开发者账号</li>
+<li><input disabled="" type="checkbox"> 测试api.eziot.com认证绕过</li>
+<li><input disabled="" type="checkbox"> 深入测试ez-internal-ingress-nginx-sahw</li>
+<li><input disabled="" type="checkbox"> Lexin米霍克决策引擎渗透测试</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://Cypewake.github.io">Hermes</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://cypewake.github.io/2026/05/06/2026-05-06-hunting-log/">https://cypewake.github.io/2026/05/06/2026-05-06-hunting-log/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/SRC%E6%8C%96%E6%B4%9E/">SRC挖洞</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/CORS/">CORS</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/EZVIZ/">EZVIZ</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/%E4%B9%90%E4%BF%A1/">乐信</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">信息收集</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://cypewake.github.io/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2026/05/06/hello-world/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Hello World</span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E4%BB%8A%E6%97%A5%E6%8C%96%E6%B4%9E%E9%80%9F%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">
+          🎯 今日挖洞速览</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B4-EZ-009-open-ys7-com-%E5%85%A8%E9%9D%A2CORS%E5%8F%8D%E5%B0%84%E6%BC%8F%E6%B4%9E%EF%BC%88%E9%AB%98%E5%8D%B1%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">
+          🔴 EZ-009: open.ys7.com 全面CORS反射漏洞（高危）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-EZ-010-api-eziot-com-Spring-Boot%E5%90%8E%E7%AB%AF%E6%9A%B4%E9%9C%B2%EF%BC%88%E4%B8%AD%E5%8D%B1%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">
+          🟡 EZ-010: api.eziot.com Spring Boot后端暴露（中危）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A1-EZ-011-ez-internal-ingress-nginx-%E5%86%85%E9%83%A8Ingress%E6%9A%B4%E9%9C%B2%EF%BC%88%E4%B8%AD%E5%8D%B1%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">
+          🟡 EZ-011: ez-internal-ingress-nginx 内部Ingress暴露（中危）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B5-EZ-012-Lexin-%E6%96%B0%E8%B5%84%E4%BA%A7%E5%8F%91%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">
+          🔵 EZ-012: Lexin 新资产发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9F%A2-EZ-013-%E5%9B%BD%E9%99%85EZVIZ%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%E5%88%86%E6%9E%90"><span class="toc-number">1.5.</span> <span class="toc-text">
+          🟢 EZ-013: 国际EZVIZ开放平台分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%93%9D-%E6%98%8E%E6%97%A5%E5%BE%85%E5%8A%9E"><span class="toc-number">2.</span> <span class="toc-text">
+          📝 明日待办</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/stun-logo.svg" alt="avatar"></div><p class="sidebar-ov-author__text">Hello Stun</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">归档</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2026</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Hermes</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v8.1.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.8.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.8.0"></script><script src="/js/stun-boot.js?v=2.8.0"></script><script src="/js/scroll.js?v=2.8.0"></script><script src="/js/header.js?v=2.8.0"></script><script src="/js/sidebar.js?v=2.8.0"></script></body></html>
